@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>index</title>
+    <script type="text/javascript" charset="utf-8" src="../lib/prototype.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/scriptaculous.js?load=effects"></script>
+    <script type="text/javascript" charset="utf-8" src="../js/drawers.js"></script>
+    
+    <!-- CSS -->
+    <style type="text/css" >
+        body {
+            font-family: arial;
+            font-size: 12px;
+        }
+        
+        a {
+            font-size: 12px;
+        }
+    
+        .vertical_container {
+            width: 700px;
+            border: 1px solid black;
+            margin-bottom: 10px;
+        }
+    
+        .accordion_toggle {
+            display: block;
+            height: 30px;
+            width: 680px;
+            background-color: #aaa;
+            padding: 0 10px 0 10px;
+            line-height: 30px;
+            color: #fff;
+            font-weight: normal;
+            text-decoration: none;
+            outline: none;
+            font-size: 14px;
+            color: #000;
+            border-bottom: 1px solid #999;
+            cursor: pointer;
+            margin: 0 0 0 0;
+        }
+        
+        .accordion_toggle_active {
+            background-color: #eee;
+            color: #000;
+            border-bottom-style: dashed;
+        }
+        
+        .accordion_content {
+            background-color: #ffffff;
+            color: #444444;
+            overflow: hidden;
+        }
+            
+        .accordion_content h2 {
+            margin: 15px 0 5px 10px;
+            color: #0099FF;
+            font-size: 15px;
+        }
+        
+        .accordion_content p {
+            line-height: 150%;
+            padding: 0px 10px 15px 10px;
+            font-size: 12px;
+        }              
+    </style>
+
+</head>
+<body>
+    <span>* Show all or hide all shouldn't be used with fixed height drawers</span>
+    <div class="vertical_container">
+        <div class="accordion_wrapper">
+            <h1 class="accordion_toggle">Drawers with fixed height</h1>
+            <div class="accordion_content">   
+              <h2>Drawers with fixed height always needs to have one opened</h2>
+              <p>Well i listened to all you guys out there in my forum and my blog and now all those wishes have been granted!</p>
+            </div>
+        </div>
+        
+        <div class="accordion_wrapper">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
+                <h2>Test header</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+            </div>
+        </div>
+        
+        <div class="accordion_wrapper">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
+                <h2>Test header</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" onclick="drawers2.showAll()">Show All</a>
+    <a href="#" onclick="drawers2.hideAll()">Hide All</a>
+    <a href="#" onclick="drawers2.toggleAll()">Toggle All</a>
+    
+    <div class="vertical_container">
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Drawers with non-fixed height, initialDrawer = false, singleDrawer = false</h1>
+            <div class="accordion_content">
+                <h2>Test header</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+            </div>
+        </div>
+        
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
+                <h2>Test header</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+            </div>
+        </div>
+        
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
+                <h2>Test header</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+            </div>
+        </div>
+        
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
+                <h2>Test header</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" charset="utf-8">
+        var drawers, drawers2;
+        function runTest() {
+            drawers = new Drawers('.accordion_wrapper', { triggerClass: "accordion_toggle", contentClass: "accordion_content", activeClass: "accordion_toggle_active", height: 200 });
+            drawers2 = new Drawers('.accordion_wrapper2', { triggerClass: "accordion_toggle", contentClass: "accordion_content", activeClass: "accordion_toggle_active" });
+        }  
+        Event.observe(window, "load", runTest);
+    </script>
+</body>
+</html>
