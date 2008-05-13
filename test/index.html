@@ -10,7 +10,7 @@
     <script type="text/javascript" charset="utf-8" src="../js/drawers.js"></script>
     
     <!-- CSS -->
-    <style type="text/css">
+    <style type="text/css" >
         body {
             font-family: arial;
             font-size: 12px;
@@ -20,13 +20,13 @@
             font-size: 12px;
         }
     
-        .drawers_container {
+        .vertical_container {
             width: 700px;
             border: 1px solid black;
             margin-bottom: 10px;
         }
     
-        .drawer_trigger, .drawer_toggle {
+        .accordion_toggle {
             display: block;
             height: 30px;
             width: 680px;
@@ -44,25 +44,31 @@
             margin: 0 0 0 0;
         }
         
-        .drawer_trigger.active, .drawer_toggle.active {
+        .accordion_toggle_active {
             background-color: #eee;
             color: #000;
             border-bottom-style: dashed;
         }
-
-        .drawer_content {
-            background-color: #fff;
-            color: #444;
+        
+        .accordion_toggle:hover {
+            background-color: #ddd;
+            color: #000;
+            border-bottom-style: dashed;
+        }        
+        
+        .accordion_content {
+            background-color: #ffffff;
+            color: #444444;
             overflow: hidden;
         }
             
-        .drawer_content h2 {
+        .accordion_content h2 {
             margin: 15px 0 5px 10px;
             color: #0099FF;
             font-size: 15px;
         }
         
-        .drawer_content p {
+        .accordion_content p {
             line-height: 150%;
             padding: 0px 10px 15px 10px;
             font-size: 12px;
@@ -72,78 +78,91 @@
 </head>
 <body>
     <span>* Show all or hide all shouldn't be used with fixed height drawers</span>
-    <div class="drawers_container">
-        <div class="drawers_wrapper">
-            <h1 class="drawer_toggle">Drawers with fixed height</h1>
-            <div class="drawer_content">   
-              <h2>Drawers with fixed height always needs to have one opened</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <div class="vertical_container">
+        <div class="accordion_wrapper">
+            <div class="accordion_content">   
+                <h2>Drawers with fixed height always needs to have one opened</h2>
+                <p>Well i listened to all you guys out there in my forum and my blog and now all those wishes have been granted!</p>
             </div>
+            <h1 class="accordion_toggle">Drawers with fixed height</h1>
         </div>
         
-        <div class="drawers_wrapper">
-            <h1 class="drawer_toggle">Some text</h1>
-            <div class="drawer_content">
+        <div class="accordion_wrapper">
+            <div class="accordion_content">
                 <h2>Test header</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
             </div>
+            <h1 class="accordion_toggle">Some text</h1>
         </div>
         
-        <div class="drawers_wrapper">
-            <h1 class="drawer_toggle">Some text</h1>
-            <div class="drawer_content">
+        <div class="accordion_wrapper">
+            <div class="accordion_content">
                 <h2>Test header</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
             </div>
+            <h1 class="accordion_toggle">Some text</h1>
         </div>
     </div>
-
-    <a href="#" onclick="drawers2.showAll()">Show All</a>
-    <a href="#" onclick="drawers2.hideAll()">Hide All</a>
-    <a href="#" onclick="drawers2.toggleAll()">Toggle All</a>
     
-    <div class="drawers_container">
-        <div class="drawers_wrapper2">
-            <h1 class="drawer_trigger">Drawers with non-fixed height, initialDrawer = false, singleDrawer = false</h1>
-            <div class="drawer_content">
+    <div class="vertical_container">
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Drawers with non-fixed height, initialDrawer = false, singleDrawer = false</h1>
+            <div class="accordion_content">
                 <h2>Test header</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
             </div>
         </div>
         
-        <div class="drawers_wrapper2">
-            <h1 class="drawer_trigger">Some text</h1>
-            <div class="drawer_content">
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
                 <h2>Test header</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
             </div>
         </div>
         
-        <div class="drawers_wrapper2">
-            <h1 class="drawer_trigger">Some text</h1>
-            <div class="drawer_content">
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
                 <h2>Test header</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
             </div>
         </div>
         
-        <div class="drawers_wrapper2">
-            <h1 class="drawer_trigger">Some text</h1>
-            <div class="drawer_content">
+        <div class="accordion_wrapper2">
+            <h1 class="accordion_toggle">Some text</h1>
+            <div class="accordion_content">
                 <h2>Test header</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
             </div>
         </div>
     </div>
     
     <script type="text/javascript" charset="utf-8">
-        var drawers, drawers2, drawers3, drawers4;
+        var drawers, drawers2;
         function runTest() {
-            drawers = new Drawers('.drawers_wrapper', { triggerClass: "drawer_toggle", height: 200 });
-            drawers2 = new Drawers('.drawers_wrapper2');
+            drawers = new Drawers('.accordion_wrapper', { 
+                duration: 0.5,
+                triggerClass: "accordion_toggle", 
+                contentClass: "accordion_content",
+                activeClass: "accordion_toggle_active",
+                height: 500,
+                showEvent: "mouseover",
+                hideEvent: "mouseout"
+            });
+            drawers2 = new Drawers('.accordion_wrapper2', { triggerClass: "accordion_toggle", contentClass: "accordion_content", activeClass: "accordion_toggle_active" });
         }  
         Event.observe(window, "load", runTest);
     </script>
