@@ -44,17 +44,15 @@
             margin: 0 0 0 0;
         }
         
-        .accordion_toggle_active {
+        .accordion_toggle_active .accordion_toggle {
             background-color: #eee;
             color: #000;
             border-bottom-style: dashed;
         }
         
-        .accordion_toggle:hover {
+        .accordion_toggle_hover .accordion_toggle {
             background-color: #ddd;
-            color: #000;
-            border-bottom-style: dashed;
-        }        
+        }
         
         .accordion_content {
             background-color: #ffffff;
@@ -158,11 +156,12 @@
                 triggerClass: "accordion_toggle", 
                 contentClass: "accordion_content",
                 activeClass: "accordion_toggle_active",
+                hoverClass: "accordion_toggle_hover",
                 height: 500,
                 showEvent: "mouseover",
                 hideEvent: "mouseout"
             });
-            drawers2 = new Drawers('.accordion_wrapper2', { triggerClass: "accordion_toggle", contentClass: "accordion_content", activeClass: "accordion_toggle_active" });
+            drawers2 = new Drawers('.accordion_wrapper2', { hoverClass: "accordion_toggle_hover", triggerClass: "accordion_toggle", contentClass: "accordion_content", activeClass: "accordion_toggle_active" });
         }  
         Event.observe(window, "load", runTest);
     </script>

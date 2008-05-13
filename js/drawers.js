@@ -30,7 +30,7 @@ Drawers.DefaultOptions = {
   triggerClass: "toggle_trigger",
   contentClass: "toggle_content",
   activeClass: "toggle_active",
-  activeClass: "toggle_hover",
+  hoverClass: "toggle_hover",
   duration: 0.5,
   singleDrawer: false,
   initialDrawer: false,
@@ -75,7 +75,7 @@ Drawers.prototype = {
                 content.setStyle({
                     display: "block"
                 });
-                this.triggers[this.options.initialDrawer].classNames().add(this.options.activeClass);
+                this.triggers[this.options.initialDrawer].parentNode.classNames().add(this.options.activeClass);
             }.bind(this));
         }
         
@@ -161,6 +161,14 @@ Drawers.prototype = {
                     trigger.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
                 }
                 
+                trigger.observe("mouseover", function(event) {
+                    event.target.parentNode.classNames().add(this.options.hoverClass);
+                }.bind(this));
+                
+                trigger.observe("mouseout", function(event) {
+                    event.target.parentNode.classNames().remove(this.options.hoverClass);
+                }.bind(this));
+                
                 this.triggers.push(trigger);
                 this.contents.push(contents);
             }.bind(this));
@@ -217,10 +225,10 @@ Drawers.prototype = {
         }
         
         if (hidden) {
-            trigger.classNames().remove(this.options.activeClass);
+            trigger.parentNode.classNames().remove(this.options.activeClass);
         }
         if (shown) {
-            trigger.classNames().add(this.options.activeClass);
+            trigger.parentNode.classNames().add(this.options.activeClass);
         }
         
         return false;
@@ -232,7 +240,7 @@ Drawers.prototype = {
     
     toggleContent: function(trigger, hide, hideOthers, runEffect) {
         //if (Effect.Queues.get(this.id).size() != 0) return false;
-        if (hideOthers && trigger.classNames().include(this.options.activeClass)) return;
+        if (hideOthers && trigger.parentNode.classNames().include(this.options.activeClass)) return;
         if (hideOthers == true) {
             Effect.Queues.get(this.id).each(function(effect){
                 effect.cancel();
@@ -279,7 +287,7 @@ Drawers.prototype = {
     
     // toggle all toggles based on the first triggers active-ness
     toggleAll: function(runEffects) {
-        var hide = this.triggers.first().classNames().include(this.options.activeClass);
+        var hide = this.triggers.first().parentNode.classNames().include(this.options.activeClass);
         this._toggleAll(hide, runEffects);
         return false;
     },
