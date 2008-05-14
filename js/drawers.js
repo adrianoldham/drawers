@@ -50,6 +50,8 @@ Drawers.prototype = {
         this.id = "drawer" + Drawers.drawers++;
 
         this.wrappers = $$(selector);
+        
+        if (this.wrappers.length < 1) return;
 
         this.options = Object.extend(Object.extend({}, Drawers.DefaultOptions), options || {});
 
