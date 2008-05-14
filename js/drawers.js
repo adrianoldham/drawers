@@ -27,19 +27,19 @@ Element.addMethods({
 var Drawers = Class.create();
 
 Drawers.DefaultOptions = {
-  triggerClass: "drawer_trigger",
-  contentClass: "drawer_content",
-  activeClass: "active",
-  hoverClass: "hover",
-  duration: 0.5,
-  singleDrawer: false,
-  initialDrawer: false,
-  height: null,                             // if height is set then one drawer is always opened as to maintain the height of the drawers
-  transition: Effect.Transitions.linear,
-  showEvent: "click",
-  hideEvent: "click",
-  showEffect: Effect.BlindDown,
-  hideEffect: Effect.BlindUp
+    triggerClass: "drawer_trigger",
+    contentClass: "drawer_content",
+    activeClass: "active",
+    hoverClass: "hover",
+    duration: 0.5,
+    singleDrawer: false,
+    initialDrawer: false,
+    height: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
+    transition: Effect.Transitions.linear,
+    showEvent: "click",
+    hideEvent: "click",
+    showEffect: Effect.BlindDown,
+    hideEffect: Effect.BlindUp
 };
 
 Drawers.drawers = 0;
