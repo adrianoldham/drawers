@@ -69,6 +69,8 @@ Drawers.prototype = {
         this.getHeights();
         this.setHeights();
         this.hideContents();
+        
+        this.status = [];
 
         // open up initial drawer
         if (typeof(this.options.initialDrawer) == "number") {
@@ -78,6 +80,7 @@ Drawers.prototype = {
                     display: "block"
                 });
                 this.triggers[this.options.initialDrawer].parentNode.classNames().add(this.options.activeClass);
+                this.status[this.options.initialDrawer] = true;
             }.bind(this));
         }
 
@@ -160,7 +163,10 @@ Drawers.prototype = {
                     trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, null, this.options.singleDrawer, true));
                 } else {
                     trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
-                    trigger.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
+                    
+                    if (!this.options.singleDrawer) {
+                        trigger.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
+                    }
                 }
 
                 trigger.observe("mouseover", function(event) {
@@ -196,7 +202,8 @@ Drawers.prototype = {
 
     toggle: function(element, trigger, hide) {
         // each toggle has it's own effects queue
-        var uniqueScope = "trigger" + this.triggers.index(trigger);
+        var triggerIndex = this.triggers.index(trigger);
+        var uniqueScope = "trigger" + triggerIndex;
         var options = {
             sync: true,
             transition: this.options.transition
@@ -226,11 +233,12 @@ Drawers.prototype = {
             shown = true;
         }
 
-        if (hidden) {
+        if (this.status[triggerIndex]) {
             trigger.parentNode.classNames().remove(this.options.activeClass);
         }
         if (shown) {
             trigger.parentNode.classNames().add(this.options.activeClass);
+            this.status[triggerIndex] = true;
         }
 
         return false;
@@ -242,7 +250,8 @@ Drawers.prototype = {
 
     toggleContent: function(trigger, hide, hideOthers, runEffect) {
         //if (Effect.Queues.get(this.id).size() != 0) return false;
-        if (hideOthers && trigger.parentNode.classNames().include(this.options.activeClass)) return;
+        if (hideOthers && (trigger.parentNode.classNames().include(this.options.activeClass) || this.status[this.triggers.index(trigger)])) return;
+        
         if (hideOthers == true) {
             Effect.Queues.get(this.id).each(function(effect){
                 effect.cancel();
@@ -269,9 +278,22 @@ Drawers.prototype = {
                 queue: { position: "end", scope: this.id },
                 duration: this.options.duration,
                 limit: 1,
-                afterFinish: function() {
+                afterFinish: function(effect) {
+                    effect.effects.each(function(effect) {
+                        var trigger = this.findTrigger(effect.element);
+                        var triggerIndex = this.triggers.index(trigger);
+                        
+                        if (effect.element.style.display == "none") {
+                            //trigger.parentNode.classNames().remove(this.options.activeClass);
+                            this.status[triggerIndex] = false;
+                        } else {
+                            //trigger.parentNode.classNames().add(this.options.activeClass);
+                            this.status[triggerIndex] = true;
+                        }
+                    }.bindAsEventListener(this));
+                    
                     this.setHeights();
-                }.bind(this)
+                }.bindAsEventListener(this)
             }
         );
     },
@@ -302,5 +324,17 @@ Drawers.prototype = {
     hideAll: function(runEffects) {
         this._toggleAll(true, runEffects);
         return false;
+    },
+    
+    findTrigger: function(content) {
+        var trigger;
+        this.contents.each(function(contents) {
+            contents.each(function(_content) {
+                if (content == _content) {
+                    trigger = this.triggers[this.contents.index(contents)];
+                }
+            }.bind(this));
+        }.bind(this));
+        return trigger;
     }
 };
