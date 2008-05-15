@@ -232,13 +232,17 @@ Drawers.prototype = {
             this.show(element, options);
             shown = true;
         }
+        
+        if (elementHidden && trigger.parentNode.classNames().include(this.options.activeClass)) {
+            trigger.parentNode.classNames().remove(this.options.activeClass);
+            this.status[triggerIndex] = false;
+        }
 
-        if (this.status[triggerIndex]) {
+        if (hidden) {
             trigger.parentNode.classNames().remove(this.options.activeClass);
         }
         if (shown) {
             trigger.parentNode.classNames().add(this.options.activeClass);
-            this.status[triggerIndex] = true;
         }
 
         return false;
@@ -278,18 +282,20 @@ Drawers.prototype = {
                 queue: { position: "end", scope: this.id },
                 duration: this.options.duration,
                 limit: 1,
+                beforeStart: function(effect) {
+                    effect.effects.each(function(effect) {
+                        var trigger = this.findTrigger(effect.element);
+                        var triggerIndex = this.triggers.index(trigger);
+
+                        this.status[triggerIndex] = true;
+                    }.bindAsEventListener(this));
+                }.bindAsEventListener(this),
                 afterFinish: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
                         var triggerIndex = this.triggers.index(trigger);
-                        
-                        if (effect.element.style.display == "none") {
-                            //trigger.parentNode.classNames().remove(this.options.activeClass);
-                            this.status[triggerIndex] = false;
-                        } else {
-                            //trigger.parentNode.classNames().add(this.options.activeClass);
-                            this.status[triggerIndex] = true;
-                        }
+
+                        this.status[triggerIndex] = false;
                     }.bindAsEventListener(this));
                     
                     this.setHeights();
