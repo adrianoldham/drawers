@@ -108,7 +108,7 @@
             <h1 class="drawer_trigger">Some text</h1>
         </div>
     </div>
-    
+    <p><a href="#" onclick="drawers2.showAll(); return false;">showAll</a> | <a href="#" onclick="drawers2.hideAll(); return false;">hideAll</a> | <a href="#" onclick="drawers2.toggleAll(); return false;">toggleAll</a></p>
     <div class="drawer_container">
         <div class="drawer2">
             <h1 class="drawer_trigger">Drawers with non-fixed height, initialDrawer = false, singleDrawer = false</h1>
@@ -160,8 +160,6 @@
                 hideEvent: "mouseout"
             });
             drawers2 = new Drawers('.drawer2', {
-                initialDrawer: true,
-                singleDrawer: true,
                 duration: 0.2
             });
         }  
