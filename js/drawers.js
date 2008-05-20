@@ -31,6 +31,7 @@ Drawers.DefaultOptions = {
     contentClass: "drawer_content",
     activeClass: "active",
     hoverClass: "hover",
+    initialDrawerClass: "drawer_initial",
     duration: 0.5,
     singleDrawer: false,
     initialDrawer: false,
@@ -64,12 +65,20 @@ Drawers.prototype = {
             }
         }
 
-        if (typeof(this.options.initialDrawer) != "number" && this.options.initialDrawer == true) this.options.initialDrawer = 0;
+        if (typeof(this.options.initialDrawer) != "number" && this.options.initialDrawer == true) {
+            this.options.initialDrawer = 0;
+        }
 
         this.setupDrawers();
         this.getHeights();
         this.setHeights();
         this.hideContents();
+        
+        this.triggers.each(function(trigger) {
+            if ($A(trigger.classNames()).include(this.options.initialDrawerClass)) {
+                this.options.initialDrawer = this.triggers.index(trigger);
+            }
+        }.bind(this));
         
         this.status = [];
 
