@@ -34,7 +34,8 @@ Drawers.DefaultOptions = {
     duration: 0.5,
     singleDrawer: false,
     initialDrawer: false,
-    height: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
+    drawerHeight: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
+    containerHeight: null,
     transition: Effect.Transitions.linear,
     showEvent: "click",
     hideEvent: "click",
@@ -56,7 +57,7 @@ Drawers.prototype = {
         this.options = Object.extend(Object.extend({}, Drawers.DefaultOptions), options || {});
 
         // if height is set then singleDrawer and initialDrawer must be set
-        if (this.options.height != null) {
+        if (this.options.containerHeight != null) {
             this.options.singleDrawer = true;
             if (this.options.initialDrawer == false) {
                 this.options.initialDrawer = true;
@@ -88,7 +89,10 @@ Drawers.prototype = {
     },
 
     contentHeight: function(element) {
-        return (this.options.height != null) ? this.options.height - this.triggersSize().height : element.scrollHeight;
+        if (this.options.containerHeight != null) return this.options.containerHeight - this.triggersSize().height;
+        if (this.options.drawerHeight != null) return this.options.drawerHeight;
+        
+        return null;
     },
 
     hideContents: function() {
@@ -105,11 +109,7 @@ Drawers.prototype = {
             var contentHeights = [];
 
             contents.each(function(content) {
-                var height = this.contentHeight(content);
-                if (content.style.display != "none") {
-                    content.style.height = height + "px";
-                    contentHeights.push(height);
-                }
+                contentHeights.push(this.contentHeight(content));
             }.bind(this));
 
             this.heights.push(contentHeights);
@@ -120,7 +120,7 @@ Drawers.prototype = {
         this.contents.each(function(contents) {
             contents.each(function(content) {
                 var height = this.heights[this.contents.index(contents)][contents.index(content)];
-                content.style.height = height + "px";
+                if (height != null) content.style.height = height + "px";
             }.bind(this));
         }.bind(this));
     },
@@ -146,13 +146,13 @@ Drawers.prototype = {
             contentElements.each(function(content) {
                 contents.push(content);
 
-                var contentHolder = new Element("div");
+                //var contentHolder = new Element("div");
 
-                content.childElements().each(function(e) {
-                    contentHolder.appendChild(e);
-                });
+                //content.childElements().each(function(e) {
+                //    contentHolder.appendChild(e);
+                //});
 
-                content.appendChild(contentHolder);
+                //content.appendChild(contentHolder);
             }.bind(this));
 
             // setup trigger events
@@ -218,7 +218,7 @@ Drawers.prototype = {
                 this.show(element, options);
                 shown = true;
             } else {
-                if (this.options.height == null) {
+                if (this.options.containerHeight == null) {
                     this.hide(element, options);
                     hidden = true;
                 } else {
