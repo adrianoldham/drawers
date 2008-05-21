@@ -74,9 +74,9 @@ Drawers.prototype = {
         this.setHeights();
         this.hideContents();
         
-        this.triggers.each(function(trigger) {
-            if ($A(trigger.classNames()).include(this.options.initialDrawerClass)) {
-                this.options.initialDrawer = this.triggers.index(trigger);
+        this.wrappers.each(function(wrapper) {
+            if ($A(wrapper.classNames()).include(this.options.initialDrawerClass)) {
+                this.options.initialDrawer = this.wrappers.index(wrapper);
             }
         }.bind(this));
         
