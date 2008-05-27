@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>Apple.com styled Drawer demo</title>
+    <script type="text/javascript" charset="utf-8" src="../lib/prototype.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/scriptaculous.js?load=effects"></script>
+    <script type="text/javascript" charset="utf-8" src="../js/drawers.js"></script>
+    
+    <!-- CSS -->
+    <style type="text/css" >
+
+        .drawers {
+            font: 11px/14px "Lucida Grande", Helvetica, Arial, sans-serif;
+            width: 188px;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .drawer  {
+            background: url(images/shingles_20070618.png) 0px 100% no-repeat;
+            padding: 0 10px 10px 10px;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .drawer.active, .drawer.hover  {
+            background: url(images/shingles_20070618.png) -188px 100% no-repeat;
+        }
+
+        .drawer a {
+            text-decoration: none;        
+        }
+
+        .drawer_content {
+            display: block;
+            text-align: center;
+        }
+
+        .drawer_content img {
+            padding: 10px 0 0 0;
+        }
+
+        .drawer_trigger {
+            display: block;
+            padding: 0;
+            margin: 0;
+            color: #666;
+            /* require for ie6 \*/
+            background: transparent;
+            height: 1%; /**/
+        }
+
+        .active .drawer_trigger {
+            color: #333;
+        } 
+
+        .drawer_trigger strong {
+            font-size: 14px;
+            line-height: 18px;
+            color: #333;
+            display: block;
+            padding: 5px 0 0 0;
+        }
+
+        .drawer .description {
+            display: block;
+        }
+
+        .drawer_trigger .more {
+            line-height: 16px;
+            color: #2970A6;
+            background: url(images/shingles_arrow20070618.png) no-repeat 100% 50%;
+            font-weight: bold;
+            padding: 0 20px 0 0;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="sidebox">
+	<ul class="drawers">
+		<li class="drawer">
+			<a class="drawer_content" href="/itunes/download/"><img src="images/essentials_itunes20070611.png" alt="iTunes Icon" width="120" height="120" border="0"></a>
+			<a class="drawer_trigger active" href="/itunes/download/">
+				<strong>iTunes 7</strong>
+				<span class="description">Music. Movies. TV Shows. Podcasts.</span>
+				<span class="more">Free Download</span>
+			</a>
+		</li>
+		<li class="drawer">
+			<a class="drawer_content" href="/quicktime/download/"><img src="images/essentials_quicktime20070611.png" alt="Quicktime Icon" width="120" height="120" border="0"></a>
+			<a class="drawer_trigger" href="/quicktime/download/">
+				<strong>QuickTime</strong>
+				<span class="description">Enjoy crystal clear video with H.264 support.</span>
+				<span class="more">Free Download</span>
+			</a>
+		</li>
+		<li class="drawer">
+			<a class="drawer_content" href="/downloads/dashboard"><img src="images/essentials_widgets20070611.png" alt="Dashboard Icon" width="120" height="120" border="0"></a>
+			<a class="drawer_trigger" href="/downloads/dashboard/">
+				<strong>Widgets</strong>
+				<span class="description">Amazing widgets for your Mac OS X Dashboard.</span>
+				<span class="more">Learn more</span>
+			</a>
+		</li>
+		<li class="drawer">
+			<a class="drawer_content" href="/safari/download/"><img src="images/essentials_safari20070611.png" alt="Safari Icon" width="120" height="120" border="0"></a>
+			<a class="drawer_trigger" href="/safari/download/">
+				<strong>Safari 3</strong>
+				<span class="description">The world's best browser. Now on Windows, too.</span>
+				<span class="more">Free Download</span>
+			</a>
+		</li>
+		<li class="drawer">
+			<a class="drawer_content" href="/trailers/"><img src="images/essentials_trailers20080109.png" alt="Movie Trailers" width="142" height="120" border="0"></a>
+			<a class="drawer_trigger" href="/trailers/">
+				<strong>Movie Trailers</strong>
+				<span class="description">The latest previews. Many in gorgeous high-def.</span>
+				<span class="more">Watch for free</span>
+			</a>
+		</li>
+	</ul>
+</div>
+
+    <script type="text/javascript" charset="utf-8">
+        function runTest() {
+            var drawers = new Drawers('.drawer', { 
+                duration: 0.35,
+                //containerHeight: 400,
+                initialDrawer: true,
+                singleDrawer: true,
+                drawerHeight: 125,
+                showEvent: "mouseover",
+                hideEvent: "mouseout",
+                showEffect: Effect.SlideDown,
+                hideEffect: Effect.SlideUp
+            });
+        }  
+        Event.observe(window, "load", runTest);
+    </script>
+</body>
+</html>
