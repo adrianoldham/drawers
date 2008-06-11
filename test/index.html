@@ -77,12 +77,99 @@
             line-height: 150%;
             padding: 0px 10px 0 10px;
             font-size: 12px;
-        }              
+        }    
+        
+        .h_drawer_container {
+            margin-bottom: 10px;
+            position: relative;
+            
+            /*REQUIRED*/
+            height: 300px;
+        }
+
+        .h_drawer_trigger {
+            text-align: center;
+            height: 300px;
+            width: 30px;
+            background-color: #aaa;
+            line-height: 30px;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 14px;
+            color: #000;
+            border-right: 1px solid #999;
+            cursor: pointer;
+            margin: 0 0 0 0;
+            
+            /*REQUIRED*/
+            float: left;
+        }
+        
+        .h_drawer .h_drawer_content {
+            width: 400px;
+        }
+        
+        .h_drawer_content {
+            background-color: #eee;
+            color: #444;
+            position: relative;
+            height: 300px;
+            
+            /*REQUIRED*/
+            float: left;
+        }
+        
     </style>
 
 </head>
 <body>
     <span>* Show all or hide all shouldn't be used with fixed height drawers</span>
+    <div class="h_drawer_container">
+        <div class="h_drawer">
+            <h1 class="h_drawer_trigger">A</h1>
+            <div class="h_drawer_content">
+                <h2>Drawers with fixed height always needs to have one opened</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+        
+        <div class="h_drawer">
+            <h1 class="h_drawer_trigger">B</h1>
+            <div class="h_drawer_content" style="display: none">   <!-- display none by default to hide it (since drawers starts after dom ready) -->
+                <h2>Test header</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+        </div>
+    </div>    
+    
+    <div class="h_drawer_container">
+        <div class="h_drawer3">
+            <h1 class="h_drawer_trigger">A</h1>
+            <div class="h_drawer_content">
+                <h2>Drawers with fixed height always needs to have one opened</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="h_drawer_container">
+        <div class="h_drawer2">
+            <h1 class="h_drawer_trigger">A</h1>
+            <div class="h_drawer_content" style="display: none">   <!-- display none by default to hide it (since drawers starts after dom ready) -->
+                <h2>Drawers with fixed height always needs to have one opened</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+        
+        <div class="h_drawer2">
+            <h1 class="h_drawer_trigger">B</h1>
+            <div class="h_drawer_content" style="display: none">
+                <h2>Test header</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+        </div>
+    </div>
+    
     <div class="drawer_container">
         <div class="drawer">
             <div class="drawer_content">   
@@ -193,6 +280,24 @@
             });
             drawers2 = new Drawers('.drawer2', {
                 duration: 0.2
+            });
+            drawers3 = new Drawers('.h_drawer', {
+                orientation: "horizontal",
+                drawerWidth: 400,
+                initialDrawer: true
+            });
+            drawers4 = new Drawers('.h_drawer2', {
+                orientation: "horizontal",
+                containerWidth: 500,
+                initialDrawer: true,
+                duration: 0.5,
+                showEvent: "mouseover",
+                hideEvent: "mouseout"
+            });
+            drawers5 = new Drawers('.h_drawer3', {
+                orientation: "horizontal",
+                drawerWidth: 400,
+                initialDrawer: false
             });
         }  
         Event.observe(window, "load", runTest);

@@ -37,11 +37,14 @@ Drawers.DefaultOptions = {
     initialDrawer: false,
     drawerHeight: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
     containerHeight: null,
+    drawerWidth: null,
+    containerWidth: null,
     transition: Effect.Transitions.linear,
     showEvent: "click",
     hideEvent: "click",
     showEffect: Effect.BlindDown,
-    hideEffect: Effect.BlindUp
+    hideEffect: Effect.BlindUp,
+    orientation: "vertical"
 };
 
 Drawers.drawers = 0;
@@ -57,8 +60,7 @@ Drawers.prototype = {
 
         this.options = Object.extend(Object.extend({}, Drawers.DefaultOptions), options || {});
 
-        // if height is set then singleDrawer and initialDrawer must be set
-        if (this.options.containerHeight != null) {
+        if (this.options.containerHeight != null || this.options.containerWidth != null) {
             this.options.singleDrawer = true;
             if (this.options.initialDrawer == false) {
                 this.options.initialDrawer = true;
@@ -70,8 +72,8 @@ Drawers.prototype = {
         }
 
         this.setupDrawers();
-        this.getHeights();
-        this.setHeights();
+        this.getSizes();
+        this.setSizes();
         this.hideContents();
         
         this.wrappers.each(function(wrapper) {
@@ -97,9 +99,19 @@ Drawers.prototype = {
         this.effects = [];
     },
 
-    contentHeight: function(element) {
-        if (this.options.containerHeight != null) return this.options.containerHeight - this.triggersSize().height;
-        if (this.options.drawerHeight != null) return this.options.drawerHeight;
+    contentSize: function(element) {
+        switch (this.options.orientation) {
+            case "vertical":
+                if (this.options.containerHeight != null) return this.options.containerHeight - this.triggersSize().height;
+                if (this.options.drawerHeight != null) return this.options.drawerHeight;
+                
+                break;
+            case "horizontal":
+                if (this.options.containerWidth != null) return this.options.containerWidth - this.triggersSize().width;
+                if (this.options.drawerWidth != null) return this.options.drawerWidth;
+                
+                break;
+        }
         
         return null;
     },
@@ -108,28 +120,39 @@ Drawers.prototype = {
         this.contents.each(function(contents) {
             contents.each(function(content) {
                 content.hide();
-          }.bind(this));
+            }.bind(this));
         }.bind(this));
     },
 
-    getHeights: function() {
-        this.heights = [];
+    getSizes: function() {
+        this.sizes = [];
         this.contents.each(function(contents) {
-            var contentHeights = [];
+            var contentSizes = [];
 
             contents.each(function(content) {
-                contentHeights.push(this.contentHeight(content));
+                contentSizes.push(this.contentSize(content));
             }.bind(this));
 
-            this.heights.push(contentHeights);
+            this.sizes.push(contentSizes);
         }.bind(this));
     },
 
-    setHeights: function() {
+    setSizes: function() {
         this.contents.each(function(contents) {
             contents.each(function(content) {
-                var height = this.heights[this.contents.index(contents)][contents.index(content)];
-                if (height != null) content.style.height = height + "px";
+                var size = this.sizes[this.contents.index(contents)][contents.index(content)];
+                
+                if (size != null) {
+                    switch (this.options.orientation) {
+                        case "vertical":
+                            content.style.height = size + "px";
+                            break;
+                        case "horizontal":
+                            content.style.width = size + "px";
+                            content.childElements().first().style.width = size + "px";
+                            break;
+                    }
+                }
             }.bind(this));
         }.bind(this));
     },
@@ -153,19 +176,33 @@ Drawers.prototype = {
             // hide each content initially
 
             contentElements.each(function(content) {
+                if (this.options.orientation == "horizontal") {                    
+                    content.setStyle({ 
+                        float: "left",
+                        overflow: "hidden",
+                        display: "block"
+                    });
+                    
+                    var contentSizer = new Element("div");
+                    contentSizer.setStyle({
+                        float: "left",
+                        overflow: "hidden"
+                    });
+                    
+                    var parent = $(content.parentNode);
+                    contentSizer.appendChild(content);
+                    parent.appendChild(contentSizer);
+                    
+                    content = contentSizer;
+                }
+                
                 contents.push(content);
-
-                //var contentHolder = new Element("div");
-
-                //content.childElements().each(function(e) {
-                //    contentHolder.appendChild(e);
-                //});
-
-                //content.appendChild(contentHolder);
             }.bind(this));
 
             // setup trigger events
             triggerElements.each(function(trigger) {
+                if (this.options.orientation == "horizontal") trigger.setStyle({ float: "left" });
+                
                 trigger.style.cursor = "pointer";
 
                 if (this.options.showEvent == this.options.hideEvent) {
@@ -215,7 +252,17 @@ Drawers.prototype = {
         var uniqueScope = "trigger" + triggerIndex;
         var options = {
             sync: true,
-            transition: this.options.transition
+            transition: this.options.transition,
+            scaleX: this.options.orientation == "horizontal",
+            scaleY: this.options.orientation == "vertical",
+            afterSetup: function(effect) {
+              var hash = {};
+
+              if ((arguments[1] || {}).scaleX) hash.width = "0px";
+              if ((arguments[1] || {}).scaleY) hash.height = "0px";
+
+              effect.element.makeClipping().setStyle(hash).show(); 
+            }
         };
 
         var elementHidden = this.isHidden(element);
@@ -307,7 +354,7 @@ Drawers.prototype = {
                         this.status[triggerIndex] = false;
                     }.bindAsEventListener(this));
                     
-                    this.setHeights();
+                    this.setSizes();
                 }.bindAsEventListener(this)
             }
         );
