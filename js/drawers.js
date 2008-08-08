@@ -310,7 +310,14 @@ Drawers.prototype = {
 
     toggleContent: function(trigger, hide, hideOthers, runEffect) {
         //if (Effect.Queues.get(this.id).size() != 0) return false;
-        if (hideOthers && (trigger.parentNode.classNames().include(this.options.activeClass) || this.status[this.triggers.index(trigger)])) return;
+        var testSizes;
+        if (this.options.orientation == "vertical") {
+            testSize = this.options.containerHeight;
+        } else {
+            testSize = this.options.containerWidth;
+        }
+        
+        if (testSize != null && hideOthers && (trigger.parentNode.classNames().include(this.options.activeClass) || this.status[this.triggers.index(trigger)])) return;
         
         if (hideOthers == true) {
             Effect.Queues.get(this.id).each(function(effect){
