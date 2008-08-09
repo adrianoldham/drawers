@@ -59,6 +59,8 @@ Drawers.prototype = {
         if (this.wrappers.length < 1) return;
 
         this.options = Object.extend(Object.extend({}, Drawers.DefaultOptions), options || {});
+        
+        if (this.options.id != null) this.id = this.options.id;
 
         if (this.options.containerHeight != null || this.options.containerWidth != null) {
             this.options.singleDrawer = true;
@@ -83,6 +85,8 @@ Drawers.prototype = {
         }.bind(this));
         
         this.status = [];
+        
+        this.useQueryString();
 
         // open up initial drawer
         if (typeof(this.options.initialDrawer) == "number") {
@@ -97,6 +101,25 @@ Drawers.prototype = {
         }
 
         this.effects = [];
+    },
+    
+    useQueryString: function() {
+        var url = window.location.toString();
+        
+        url.match(/\?(.+)$/);
+        var params = RegExp.$1;
+
+        var params = params.split("&");
+        var queryStringList = {};
+
+        for(var i = 0; i < params.length; i++) {
+            var tmp = params[i].split("=");
+            queryStringList[tmp[0]] = unescape(tmp[1]);
+        }
+        
+        if (queryStringList.drawer == this.id) {
+            this.options.initialDrawer = parseInt(queryStringList.number);
+        }
     },
 
     contentSize: function(element) {
