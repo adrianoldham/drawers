@@ -30,6 +30,7 @@ Drawers.DefaultOptions = {
     triggerClass: "drawer_trigger",
     contentClass: "drawer_content",
     activeClass: "active",
+    animatingClass: "animating",
     hoverClass: "hover",
     initialDrawerClass: "drawer_initial",
     duration: 0.5,
@@ -371,6 +372,8 @@ Drawers.prototype = {
                 beforeStart: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
+                        trigger.parentNode.classNames().add(this.options.animatingClass);
+            
                         var triggerIndex = this.triggers.index(trigger);
 
                         this.status[triggerIndex] = true;
@@ -379,6 +382,8 @@ Drawers.prototype = {
                 afterFinish: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
+                        trigger.parentNode.classNames().remove(this.options.animatingClass);
+                        
                         var triggerIndex = this.triggers.index(trigger);
 
                         this.status[triggerIndex] = false;
