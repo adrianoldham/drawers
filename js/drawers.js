@@ -111,15 +111,10 @@ Drawers.prototype = {
         var params = RegExp.$1;
 
         var params = params.split("&");
-        var queryStringList = {};
 
         for(var i = 0; i < params.length; i++) {
             var tmp = params[i].split("=");
-            queryStringList[tmp[0]] = unescape(tmp[1]);
-        }
-        
-        if (queryStringList.drawer == this.id) {
-            this.options.initialDrawer = parseInt(queryStringList.number);
+            if (tmp[0] == this.id) this.options.initialDrawer = parseInt(tmp[1] - 1);            
         }
     },
 
