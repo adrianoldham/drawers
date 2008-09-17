@@ -26,6 +26,8 @@ Element.addMethods({
 
 var Drawers = Class.create();
 
+Drawers.Instances = [];
+
 Drawers.DefaultOptions = {
     triggerClass: "drawer_trigger",
     contentClass: "drawer_content",
@@ -49,6 +51,20 @@ Drawers.DefaultOptions = {
 };
 
 Drawers.drawers = 0;
+
+Drawers.Check = function () {
+    var elements = $$(window.location.hash);
+    if (elements.length != 0) {
+        var element = elements[0];
+        
+        Drawers.Instances.each(function(instance) {
+            instance.openIfParentOf(element);
+        });
+        
+        var position = element.cumulativeOffset();
+        window.scrollTo(position[0], position[1]);
+    }
+};
 
 Drawers.prototype = {
     initialize: function(selector, options) {
@@ -91,17 +107,45 @@ Drawers.prototype = {
 
         // open up initial drawer
         if (typeof(this.options.initialDrawer) == "number") {
-            var contents = this.contents[this.options.initialDrawer];
-            contents.each(function(content) {
-                content.setStyle({
-                    display: "block"
-                });
-                this.triggers[this.options.initialDrawer].parentNode.classNames().add(this.options.activeClass);
-                this.status[this.options.initialDrawer] = true;
-            }.bind(this));
+            this.triggerContents(this.options.initialDrawer);
         }
 
         this.effects = [];
+        
+        Drawers.Instances.push(this);
+    },
+    
+    triggerContents: function(index) {
+        for (var i = 0; i < this.contents.length; i++) {
+            var contents = this.contents[i];
+            contents.each(function(content) {
+                content.setStyle({ display: "none" });
+                this.triggers[i].parentNode.classNames().remove(this.options.activeClass);
+                this.status[i] = false;
+            }.bind(this));
+        }
+        
+        var contents = this.contents[index];
+        contents.each(function(content) {
+            content.setStyle({
+                display: "block"
+            });
+            this.triggers[index].parentNode.classNames().add(this.options.activeClass);
+            this.status[index] = true;
+        }.bind(this));
+    },
+    
+    openIfParentOf: function(element) {
+        var result = null;
+        
+        this.wrappers.each(function(wrapper) {
+            if (element.descendantOf(wrapper) || (wrapper == element)) {
+                var index = this.wrappers.index(wrapper);
+                this.triggerContents(index);    
+            }
+        }.bind(this));
+        
+        return result;
     },
     
     useQueryString: function() {

@@ -127,34 +127,7 @@
 
 </head>
 <body>
-    <span>* Show all or hide all shouldn't be used with fixed height drawers</span>
-    <div class="h_drawer_container">
-        <div class="h_drawer">
-            <h1 class="h_drawer_trigger">A</h1>
-            <div class="h_drawer_content">
-                <h2>Drawers with fixed height always needs to have one opened</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-        </div>
-        
-        <div class="h_drawer">
-            <h1 class="h_drawer_trigger">B</h1>
-            <div class="h_drawer_content" style="display: none">   <!-- display none by default to hide it (since drawers starts after dom ready) -->
-                <h2>Test header</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-        </div>
-    </div>    
-    
-    <div class="h_drawer_container">
-        <div class="h_drawer3">
-            <h1 class="h_drawer_trigger">A</h1>
-            <div class="h_drawer_content">
-                <h2>Drawers with fixed height always needs to have one opened</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-        </div>
-    </div>
+    <span>* Show all or hide all shouldn't be used with fixed height drawers</span>  
     
     <div class="h_drawer_container">
         <div class="h_drawer2">
@@ -268,7 +241,35 @@
             </div>
         </div>
     </div>
-    
+
+    <div class="h_drawer_container">
+        <div class="h_drawer">
+            <h1 class="h_drawer_trigger">A</h1>
+            <div class="h_drawer_content">
+                <h2>Drawers with fixed height always needs to have one opened</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+        
+        <div class="h_drawer">
+            <h1 class="h_drawer_trigger">B</h1>
+            <div class="h_drawer_content" style="display: none">   <!-- display none by default to hide it (since drawers starts after dom ready) -->
+                <h2>Test header</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			    <div class="h_drawer_container">
+			        <div id="test" class="h_drawer3">
+			            <h1 class="h_drawer_trigger">A</h1>
+			            <div class="h_drawer_content">
+			                <h2>Drawers with fixed height always needs to have one opened</h2>
+			                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+			            </div>
+			        </div>
+			    </div>
+			
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" charset="utf-8">
         var drawers, drawers2;
         function runTest() {
@@ -289,7 +290,7 @@
             drawers3 = new Drawers('.h_drawer', {
 				id: "testDrawer",
                 orientation: "horizontal",
-                drawerWidth: 400,
+                drawerWidth: 900,
                 initialDrawer: true,
 				singleDrawer: true
             });
@@ -306,6 +307,8 @@
                 drawerWidth: 400,
                 initialDrawer: false
             });
+
+			Drawers.Check();
         }  
         Event.observe(window, "load", runTest);
     </script>
