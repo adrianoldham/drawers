@@ -54,6 +54,10 @@ Drawers.drawers = 0;
 
 Drawers.Check = function () {
     var elements = $$(window.location.hash);
+
+    // check if we have another element to scroll to
+    if (Drawers.scrollToElement) elements.push(Drawers.scrollToElement);
+    
     if (elements.length != 0) {
         var element = elements[0];
         
@@ -158,7 +162,14 @@ Drawers.prototype = {
 
         for(var i = 0; i < params.length; i++) {
             var tmp = params[i].split("=");
-            if (tmp[0] == this.id) this.options.initialDrawer = parseInt(tmp[1] - 1);            
+            if (tmp[0] == this.id) {
+                this.options.initialDrawer = parseInt(tmp[1] - 1);            
+            
+                if (i == params.length - 1) {
+                    // scroll to if it is the last drawer
+                    Drawers.scrollToElement = this.wrappers[this.options.initialDrawer];
+                }
+            }
         }
     },
 
