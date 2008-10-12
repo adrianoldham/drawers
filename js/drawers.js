@@ -12,6 +12,8 @@ Array.prototype.include = function(val) {
 
 Element.addMethods({
    getChildElementsByClassName: function(element, className) {
+       return element.getElementsBySelector("." + className);
+       
         var array = new Array();
 
         element.select("." + className).each(function(e) {
