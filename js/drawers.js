@@ -12,7 +12,7 @@ Array.prototype.include = function(val) {
 
 Element.addMethods({
    getChildElementsByClassName: function(element, className) {
-       return element.getElementsBySelector("." + className);
+       return $(element).getElementsBySelector("." + className);
        
         var array = new Array();
 
@@ -126,7 +126,7 @@ Drawers.prototype = {
             var contents = this.contents[i];
             contents.each(function(content) {
                 content.setStyle({ display: "none" });
-                this.triggers[i].parentNode.classNames().remove(this.options.activeClass);
+                $(this.triggers[i].parentNode).classNames().remove(this.options.activeClass);
                 this.status[i] = false;
             }.bind(this));
         }
@@ -136,7 +136,7 @@ Drawers.prototype = {
             content.setStyle({
                 display: "block"
             });
-            this.triggers[index].parentNode.classNames().add(this.options.activeClass);
+            $(this.triggers[index].parentNode).classNames().add(this.options.activeClass);
             this.status[index] = true;
         }.bind(this));
     },
@@ -292,11 +292,11 @@ Drawers.prototype = {
                 }
 
                 trigger.observe("mouseover", function(event) {
-                    event.target.parentNode.classNames().add(this.options.hoverClass);
+                    $(event.target.parentNode).classNames().add(this.options.hoverClass);
                 }.bind(this));
 
                 trigger.observe("mouseout", function(event) {
-                    event.target.parentNode.classNames().remove(this.options.hoverClass);
+                    $(event.target.parentNode).classNames().remove(this.options.hoverClass);
                 }.bind(this));
 
                 this.triggers.push(trigger);
@@ -365,16 +365,16 @@ Drawers.prototype = {
             shown = true;
         }
         
-        if (elementHidden && trigger.parentNode.classNames().include(this.options.activeClass)) {
-            trigger.parentNode.classNames().remove(this.options.activeClass);
+        if (elementHidden && $(trigger.parentNode).classNames().include(this.options.activeClass)) {
+            $(trigger.parentNode).classNames().remove(this.options.activeClass);
             this.status[triggerIndex] = false;
         }
 
         if (hidden) {
-            trigger.parentNode.classNames().remove(this.options.activeClass);
+            $(trigger.parentNode).classNames().remove(this.options.activeClass);
         }
         if (shown) {
-            trigger.parentNode.classNames().add(this.options.activeClass);
+            $(trigger.parentNode).classNames().add(this.options.activeClass);
         }
 
         return false;
@@ -393,7 +393,7 @@ Drawers.prototype = {
             testSize = this.options.containerWidth;
         }
         
-        if (testSize != null && hideOthers && (trigger.parentNode.classNames().include(this.options.activeClass) || this.status[this.triggers.index(trigger)])) return;
+        if (testSize != null && hideOthers && ($(trigger.parentNode).classNames().include(this.options.activeClass) || this.status[this.triggers.index(trigger)])) return;
         
         if (hideOthers == true) {
             Effect.Queues.get(this.id).each(function(effect){
@@ -424,7 +424,7 @@ Drawers.prototype = {
                 beforeStart: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
-                        trigger.parentNode.classNames().add(this.options.animatingClass);
+                        $(trigger.parentNode).classNames().add(this.options.animatingClass);
             
                         var triggerIndex = this.triggers.index(trigger);
 
@@ -434,7 +434,7 @@ Drawers.prototype = {
                 afterFinish: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
-                        trigger.parentNode.classNames().remove(this.options.animatingClass);
+                        $(trigger.parentNode).classNames().remove(this.options.animatingClass);
                         
                         var triggerIndex = this.triggers.index(trigger);
 
@@ -460,7 +460,7 @@ Drawers.prototype = {
 
     // toggle all toggles based on the first triggers active-ness
     toggleAll: function(runEffects) {
-        var hide = this.triggers.first().parentNode.classNames().include(this.options.activeClass);
+        var hide = $(this.triggers.first().parentNode).classNames().include(this.options.activeClass);
         this._toggleAll(hide, runEffects);
         return false;
     },
