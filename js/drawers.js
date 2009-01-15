@@ -49,7 +49,8 @@ Drawers.DefaultOptions = {
     hideEvent: "click",
     showEffect: Effect.BlindDown,
     hideEffect: Effect.BlindUp,
-    orientation: "vertical"
+    orientation: "vertical",
+    anchorTriggersSelector: "a.drawers"
 };
 
 Drawers.drawers = 0;
@@ -118,7 +119,31 @@ Drawers.prototype = {
 
         this.effects = [];
         
+        this.setupAnchorTriggers();
+        
         Drawers.Instances.push(this);
+    },
+    
+    setupAnchorTriggers: function() {
+        this.anchors = $$(this.options.anchorTriggersSelector);
+        
+        // search through all anchors
+        this.anchors.each(function(anchor) {
+            var trigger;
+            var drawerId = anchor.href.substring(anchor.href.indexOf("#") + 1);
+            
+            // find wrapper than has matching id as anchor href
+            this.wrappers.each(function(wrapper) {
+                if (wrapper.id == drawerId) {
+                    trigger = this.triggers[this.wrappers.index(wrapper)];
+                }
+            }.bind(this))
+            
+            // make it clickable
+            if (trigger) {
+                anchor.observe('click', this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
+            }
+        }.bind(this));
     },
     
     triggerContents: function(index) {
