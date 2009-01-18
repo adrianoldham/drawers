@@ -137,7 +137,7 @@ Drawers.prototype = {
                 if (wrapper.id == drawerId) {
                     trigger = this.triggers[this.wrappers.index(wrapper)];
                 }
-            }.bind(this))
+            }.bind(this));
             
             // make it clickable
             if (trigger) {
