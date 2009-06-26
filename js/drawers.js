@@ -50,7 +50,9 @@ Drawers.DefaultOptions = {
     showEffect: Effect.BlindDown,
     hideEffect: Effect.BlindUp,
     orientation: "vertical",
-    anchorTriggersSelector: "a.drawers"
+    anchorTriggersSelector: "a.drawers",
+    onAnimate: function() {},
+    onAnimateComplete: function() {}
 };
 
 Drawers.drawers = 0;
@@ -456,6 +458,10 @@ Drawers.prototype = {
                         this.status[triggerIndex] = true;
                     }.bindAsEventListener(this));
                 }.bindAsEventListener(this),
+                afterUpdate: function(effect) {
+                    // Call callback function
+                    this.options.onAnimate();
+                }.bindAsEventListener(this),
                 afterFinish: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
@@ -467,6 +473,9 @@ Drawers.prototype = {
                     }.bindAsEventListener(this));
                     
                     this.setSizes();
+                    
+                    // Call callback function
+                    this.options.onAnimateComplete();
                 }.bindAsEventListener(this)
             }
         );

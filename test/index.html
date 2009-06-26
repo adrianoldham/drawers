@@ -281,18 +281,20 @@
                 hoverClass: "drawer_trigger_hover",
                 containerHeight: 400,
                 showEvent: "mouseover",
-                hideEvent: "mouseout"
+                hideEvent: "mouseout",
+                onAnimateComplete: function() { if (console) console.log('Animate complete'); },
+                onAnimate: function() { if (console) console.log('Animating'); }
             });
             drawers2 = new Drawers('.drawer2', {
                 duration: 0.2,
-				singleDrawer: true
+				        singleDrawer: true
             });
             drawers3 = new Drawers('.h_drawer', {
 				id: "testDrawer",
                 orientation: "horizontal",
                 drawerWidth: 900,
                 initialDrawer: true,
-				singleDrawer: true
+				        singleDrawer: true
             });
             drawers4 = new Drawers('.h_drawer2', {
                 orientation: "horizontal",
