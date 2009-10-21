@@ -40,9 +40,10 @@ Drawers.DefaultOptions = {
     duration: 0.5,
     singleDrawer: false,
     initialDrawer: false,
-    drawerHeight: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
+    contentHeight: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
+    drawerHeight: null,
     containerHeight: null,
-    drawerWidth: null,
+    contentWidth: null,
     containerWidth: null,
     transition: Effect.Transitions.linear,
     showEvent: "click",
@@ -206,12 +207,14 @@ Drawers.prototype = {
         switch (this.options.orientation) {
             case "vertical":
                 if (this.options.containerHeight != null) return this.options.containerHeight - this.triggersSize().height;
-                if (this.options.drawerHeight != null) return this.options.drawerHeight;
+                if (this.options.contentHeight != null) return this.options.contentHeight;
+                if (this.options.drawerHeight != null) return this.options.drawerHeight - this.triggersSize().height;
                 
                 break;
             case "horizontal":
                 if (this.options.containerWidth != null) return this.options.containerWidth - this.triggersSize().width;
-                if (this.options.drawerWidth != null) return this.options.drawerWidth;
+                if (this.options.contentWidth != null) return this.options.contentWidth;
+                if (this.options.drawerWidth != null) return this.options.drawerWidth - this.triggersSize().width;
                 
                 break;
         }
