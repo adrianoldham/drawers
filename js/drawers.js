@@ -53,7 +53,8 @@ Drawers.DefaultOptions = {
     orientation: "vertical",
     anchorTriggersSelector: "a.drawers",
     onAnimate: function() {},
-    onAnimateComplete: function() {}
+    onAnimateComplete: function() {},
+	wrapperIsTrigger: true
 };
 
 Drawers.drawers = 0;
@@ -305,22 +306,38 @@ Drawers.prototype = {
                 contents.push(content);
             }.bind(this));
 
+			if (this.options.wrapperIsTrigger) {
+				var trigger = triggerElements[0];
+				
+                if (this.options.showEvent == this.options.hideEvent) {
+                    wrapper.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, null, this.options.singleDrawer, true));
+                } else {
+                    wrapper.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
+                    
+                    if (!this.options.singleDrawer) {
+                        wrapper.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
+                    }
+                }
+			}
+
             // setup trigger events
             triggerElements.each(function(trigger) {
                 if (this.options.orientation == "horizontal") trigger.setStyle({ float: "left" });
                 
                 trigger.style.cursor = "pointer";
+				
+				if (!this.options.wrapperIsTrigger) {
+	                if (this.options.showEvent == this.options.hideEvent) {
+	                    trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, null, this.options.singleDrawer, true));
+	                } else {
+	                    trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
 
-                if (this.options.showEvent == this.options.hideEvent) {
-                    trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, null, this.options.singleDrawer, true));
-                } else {
-                    trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
-                    
-                    if (!this.options.singleDrawer) {
-                        trigger.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
-                    }
-                }
-
+	                    if (!this.options.singleDrawer) {
+	                        trigger.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
+	                    }
+	                }
+				}
+				
                 trigger.observe("mouseover", function(event) {
                     $(event.target.parentNode).classNames().add(this.options.hoverClass);
                 }.bind(this));
