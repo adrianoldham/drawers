@@ -54,7 +54,7 @@ Drawers.DefaultOptions = {
     anchorTriggersSelector: "a.drawers",
     onAnimate: function() {},
     onAnimateComplete: function() {},
-	wrapperIsTrigger: true
+	wrapperIsTrigger: false
 };
 
 Drawers.drawers = 0;
