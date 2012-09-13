@@ -13,7 +13,7 @@ Array.prototype.include = function(val) {
 Element.addMethods({
    getChildElementsByClassName: function(element, className) {
        return $(element).getElementsBySelector("." + className);
-       
+
         var array = new Array();
 
         element.select("." + className).each(function(e) {
@@ -26,68 +26,80 @@ Element.addMethods({
    }
 });
 
-var Drawers = Class.create();
+var EventDispatcher = Class.create({
+    initialize: function() {
+        this.tagsWithFuncs = {};
+    },
 
-Drawers.Instances = [];
+    // Attach and event to the specified tag
+    attachCallbackToEvent: function(tag, func) {
+        var funcs = this.tagsWithFuncs[tag];
 
-Drawers.DefaultOptions = {
-    triggerClass: "drawer_trigger",
-    contentClass: "drawer_content",
-    activeClass: "active",
-    animatingClass: "animating",
-    hoverClass: "hover",
-    initialDrawerClass: "drawer_initial",
-    duration: 0.5,
-    singleDrawer: false,
-    initialDrawer: false,
-    contentHeight: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
-    drawerHeight: null,
-    containerHeight: null,
-    contentWidth: null,
-    containerWidth: null,
-    transition: Effect.Transitions.linear,
-    showEvent: "click",
-    hideEvent: "click",
-    showEffect: Effect.BlindDown,
-    hideEffect: Effect.BlindUp,
-    orientation: "vertical",
-    anchorTriggersSelector: "a.drawers",
-    onAnimate: function() {},
-    onAnimateComplete: function() {},
-	wrapperIsTrigger: false
-};
+        if (funcs == null) {
+           funcs = [];
+           this.tagsWithFuncs[tag] = funcs;
+        }
 
-Drawers.drawers = 0;
+        funcs.push(func);
+    },
 
-Drawers.Check = function () {
-    var elements = $$(window.location.hash);
+    // Call the events that have been attached to the specified tag
+    callEventsWithTag: function(tag, object) {
+        var funcs = this.tagsWithFuncs[tag];
 
-    // check if we have another element to scroll to
-    if (Drawers.scrollToElement) elements.push(Drawers.scrollToElement);
-    
-    if (elements.length != 0) {
-        var element = elements[0];
-        
-        Drawers.Instances.each(function(instance) {
-            instance.openIfParentOf(element);
-        });
-        
-        var position = element.cumulativeOffset();
-        window.scrollTo(position[0], position[1]);
+        if (funcs != null) {
+            funcs.each(function(func) {
+                func(object);
+            });
+        }
     }
-};
+});
 
-Drawers.prototype = {
+var Drawers = Class.create(EventDispatcher, {
+    options: {
+        triggerClass: "drawer_trigger",
+        contentClass: "drawer_content",
+        activeClass: "active",
+        animatingClass: "animating",
+        hoverClass: "hover",
+        initialDrawerClass: "drawer_initial",
+        duration: 0.25,
+        singleDrawer: false,
+        initialDrawer: false,
+        contentHeight: null,                             // if height is set then one drawer is always opened to maintain the height of the drawers
+        drawerHeight: null,
+        containerHeight: null,
+        contentWidth: null,
+        containerWidth: null,
+        transition: Effect.Transitions.linear,
+        showEvent: "click",
+        hideEvent: "click",
+        showEffect: Effect.BlindDown,
+        hideEffect: Effect.BlindUp,
+        orientation: "vertical",
+        anchorTriggersSelector: "a.drawers",
+        onAnimate: function() {},
+        onAnimateComplete: function() {},
+        wrapperIsTrigger: false
+    },
+
     initialize: function(selector, options) {
+
+        this.Instances = [];
+        this.drawers = 0;
+
+        // Since we can't use $super, we'll need to duplicate EventDispatcher.initialize here
+        this.tagsWithFuncs = {};
+
         // setup a unique id for each drawer created
-        this.id = "drawer" + Drawers.drawers++;
+        this.id = "drawer" + this.drawers++;
 
         this.wrappers = $$(selector);
-        
+
         if (this.wrappers.length < 1) return;
 
-        this.options = Object.extend(Object.extend({}, Drawers.DefaultOptions), options || {});
-        
+        this.options = Object.extend(Object.extend({ }, this.options), options || { });
+
         if (this.options.id != null) this.id = this.options.id;
 
         if (this.options.containerHeight != null || this.options.containerWidth != null) {
@@ -105,15 +117,15 @@ Drawers.prototype = {
         this.getSizes();
         this.setSizes();
         this.hideContents();
-        
+
         this.wrappers.each(function(wrapper) {
             if ($A(wrapper.classNames()).include(this.options.initialDrawerClass)) {
                 this.options.initialDrawer = this.wrappers.index(wrapper);
             }
         }.bind(this));
-        
+
         this.status = [];
-        
+
         this.useQueryString();
 
         // open up initial drawer
@@ -122,70 +134,70 @@ Drawers.prototype = {
         }
 
         this.effects = [];
-        
+
         this.setupAnchorTriggers();
-        
-        Drawers.Instances.push(this);
+
+        this.Instances.push(this);
     },
-    
+
     setupAnchorTriggers: function() {
         this.anchors = $$(this.options.anchorTriggersSelector);
-        
+
         // search through all anchors
         this.anchors.each(function(anchor) {
             var trigger;
             var drawerId = anchor.href.substring(anchor.href.indexOf("#") + 1);
-            
+
             // find wrapper than has matching id as anchor href
             this.wrappers.each(function(wrapper) {
                 if (wrapper.id == drawerId) {
                     trigger = this.triggers[this.wrappers.index(wrapper)];
                 }
             }.bind(this));
-            
+
             // make it clickable
             if (trigger) {
                 anchor.observe('click', this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
             }
         }.bind(this));
     },
-    
+
     triggerContents: function(index) {
         for (var i = 0; i < this.contents.length; i++) {
             var contents = this.contents[i];
             contents.each(function(content) {
                 content.setStyle({ display: "none" });
-                $(this.triggers[i].parentNode).classNames().remove(this.options.activeClass);
+                $(this.triggers[i].parentNode).removeClassName(this.options.activeClass);
                 this.status[i] = false;
             }.bind(this));
         }
-        
+
         var contents = this.contents[index];
         contents.each(function(content) {
             content.setStyle({
                 display: "block"
             });
-            $(this.triggers[index].parentNode).classNames().add(this.options.activeClass);
+            $(this.triggers[index].parentNode).addClassName(this.options.activeClass);
             this.status[index] = true;
         }.bind(this));
     },
-    
+
     openIfParentOf: function(element) {
         var result = null;
-        
+
         this.wrappers.each(function(wrapper) {
             if (element.descendantOf(wrapper) || (wrapper == element)) {
                 var index = this.wrappers.index(wrapper);
-                this.triggerContents(index);    
+                this.triggerContents(index);
             }
         }.bind(this));
-        
+
         return result;
     },
-    
+
     useQueryString: function() {
         var url = window.location.toString();
-        
+
         url.match(/\?(.+)$/);
         var params = RegExp.$1;
 
@@ -194,11 +206,11 @@ Drawers.prototype = {
         for(var i = 0; i < params.length; i++) {
             var tmp = params[i].split("=");
             if (tmp[0] == this.id) {
-                this.options.initialDrawer = parseInt(tmp[1] - 1);            
-            
+                this.options.initialDrawer = parseInt(tmp[1] - 1);
+
                 if (i == params.length - 1) {
                     // scroll to if it is the last drawer
-                    Drawers.scrollToElement = this.wrappers[this.options.initialDrawer];
+                    this.scrollToElement = this.wrappers[this.options.initialDrawer];
                 }
             }
         }
@@ -210,22 +222,23 @@ Drawers.prototype = {
                 if (this.options.containerHeight != null) return this.options.containerHeight - this.triggersSize().height;
                 if (this.options.contentHeight != null) return this.options.contentHeight;
                 if (this.options.drawerHeight != null) return this.options.drawerHeight - this.triggersSize().height;
-                
+
                 break;
             case "horizontal":
                 if (this.options.containerWidth != null) return this.options.containerWidth - this.triggersSize().width;
                 if (this.options.contentWidth != null) return this.options.contentWidth;
                 if (this.options.drawerWidth != null) return this.options.drawerWidth - this.triggersSize().width;
-                
+
                 break;
         }
-        
+
         return null;
     },
 
     hideContents: function() {
         this.contents.each(function(contents) {
             contents.each(function(content) {
+                if (!content) return;
                 content.hide();
             }.bind(this));
         }.bind(this));
@@ -248,7 +261,7 @@ Drawers.prototype = {
         this.contents.each(function(contents) {
             contents.each(function(content) {
                 var size = this.sizes[this.contents.index(contents)][contents.index(content)];
-                
+
                 if (size != null) {
                     switch (this.options.orientation) {
                         case "vertical":
@@ -280,70 +293,73 @@ Drawers.prototype = {
             if (triggerElements.length == 0) triggerElements = [ wrapper.childElements().first() ];
             if (contentElements.length == 0) contentElements = [ wrapper.childElements()[1] ];
 
-            // hide each content initially
+            // if we still can't find a trigger or content, then die
+            if (triggerElements.first() == undefined) return;
+            if (contentElements.first() == undefined) return;
 
+            // hide each content initially
             contentElements.each(function(content) {
-                if (this.options.orientation == "horizontal") {                    
-                    content.setStyle({ 
+                if (this.options.orientation == "horizontal") {
+                    content.setStyle({
                         float: "left",
                         overflow: "hidden",
                         display: "block"
                     });
-                    
+
                     var contentSizer = new Element("div");
                     contentSizer.setStyle({
                         float: "left",
                         overflow: "hidden"
                     });
-                    
+
                     var parent = $(content.parentNode);
                     contentSizer.appendChild(content);
                     parent.appendChild(contentSizer);
-                    
+
                     content = contentSizer;
                 }
-                
+
                 contents.push(content);
             }.bind(this));
 
-			if (this.options.wrapperIsTrigger) {
-				var trigger = triggerElements[0];
-				
+            if (this.options.wrapperIsTrigger) {
+                var trigger = triggerElements[0];
+
                 if (this.options.showEvent == this.options.hideEvent) {
                     wrapper.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, null, this.options.singleDrawer, true));
                 } else {
                     wrapper.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
-                    
+
                     if (!this.options.singleDrawer) {
                         wrapper.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
                     }
                 }
-			}
+            }
 
             // setup trigger events
             triggerElements.each(function(trigger) {
                 if (this.options.orientation == "horizontal") trigger.setStyle({ float: "left" });
-                
-                trigger.style.cursor = "pointer";
-				
-				if (!this.options.wrapperIsTrigger) {
-	                if (this.options.showEvent == this.options.hideEvent) {
-	                    trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, null, this.options.singleDrawer, true));
-	                } else {
-	                    trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
 
-	                    if (!this.options.singleDrawer) {
-	                        trigger.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
-	                    }
-	                }
-				}
-				
+                trigger.style.cursor = "pointer";
+
+                if (!this.options.wrapperIsTrigger) {
+                    if (this.options.showEvent == this.options.hideEvent) {
+                        trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, null, this.options.singleDrawer, true));
+                    } else {
+                        trigger.observe(this.options.showEvent, this.toggleContent.bind(this, trigger, false, this.options.singleDrawer, true));
+
+                        if (!this.options.singleDrawer) {
+                            trigger.observe(this.options.hideEvent, this.toggleContent.bind(this, trigger, true, this.options.singleDrawer, true));
+                        }
+                    }
+                }
+
                 trigger.observe("mouseover", function(event) {
-                    $(event.target.parentNode).classNames().add(this.options.hoverClass);
+                    $(event.target.parentNode).addClassName(this.options.hoverClass);
                 }.bind(this));
 
                 trigger.observe("mouseout", function(event) {
-                    $(event.target.parentNode).classNames().remove(this.options.hoverClass);
+                    $(event.target.parentNode).removeClassName(this.options.hoverClass);
                 }.bind(this));
 
                 this.triggers.push(trigger);
@@ -384,7 +400,7 @@ Drawers.prototype = {
               if ((arguments[1] || {}).scaleX) hash.width = "0px";
               if ((arguments[1] || {}).scaleY) hash.height = "0px";
 
-              effect.element.makeClipping().setStyle(hash).show(); 
+              effect.element.makeClipping().setStyle(hash).show();
             }
         };
 
@@ -411,17 +427,20 @@ Drawers.prototype = {
             this.show(element, options);
             shown = true;
         }
-        
-        if (elementHidden && $(trigger.parentNode).classNames().include(this.options.activeClass)) {
-            $(trigger.parentNode).classNames().remove(this.options.activeClass);
+
+        if (elementHidden && $(trigger.parentNode).hasClassName(this.options.activeClass)) {
+            $(trigger.parentNode).removeClassName(this.options.activeClass);
+            trigger.removeClassName(this.options.activeClass);
             this.status[triggerIndex] = false;
         }
 
         if (hidden) {
-            $(trigger.parentNode).classNames().remove(this.options.activeClass);
+            $(trigger.parentNode).removeClassName(this.options.activeClass);
+            trigger.removeClassName(this.options.activeClass);
         }
         if (shown) {
-            $(trigger.parentNode).classNames().add(this.options.activeClass);
+            $(trigger.parentNode).addClassName(this.options.activeClass);
+            trigger.addClassName(this.options.activeClass);
         }
 
         return false;
@@ -439,9 +458,9 @@ Drawers.prototype = {
         } else {
             testSize = this.options.containerWidth;
         }
-        
-        if (testSize != null && hideOthers && ($(trigger.parentNode).classNames().include(this.options.activeClass) || this.status[this.triggers.index(trigger)])) return;
-        
+
+        if (testSize != null && hideOthers && ($(trigger.parentNode).hasClassName(this.options.activeClass) || this.status[this.triggers.index(trigger)])) return;
+
         if (hideOthers == true) {
             Effect.Queues.get(this.id).each(function(effect){
                 effect.cancel();
@@ -471,8 +490,8 @@ Drawers.prototype = {
                 beforeStart: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
-                        $(trigger.parentNode).classNames().add(this.options.animatingClass);
-            
+                        $(trigger.parentNode).addClassName(this.options.animatingClass);
+
                         var triggerIndex = this.triggers.index(trigger);
 
                         this.status[triggerIndex] = true;
@@ -485,15 +504,15 @@ Drawers.prototype = {
                 afterFinish: function(effect) {
                     effect.effects.each(function(effect) {
                         var trigger = this.findTrigger(effect.element);
-                        $(trigger.parentNode).classNames().remove(this.options.animatingClass);
-                        
+                        $(trigger.parentNode).removeClassName(this.options.animatingClass);
+
                         var triggerIndex = this.triggers.index(trigger);
 
                         this.status[triggerIndex] = false;
                     }.bindAsEventListener(this));
-                    
+
                     this.setSizes();
-                    
+
                     // Call callback function
                     this.options.onAnimateComplete();
                 }.bindAsEventListener(this)
@@ -514,7 +533,7 @@ Drawers.prototype = {
 
     // toggle all toggles based on the first triggers active-ness
     toggleAll: function(runEffects) {
-        var hide = $(this.triggers.first().parentNode).classNames().include(this.options.activeClass);
+        var hide = $(this.triggers.first().parentNode).hasClassName(this.options.activeClass);
         this._toggleAll(hide, runEffects);
         return false;
     },
@@ -528,7 +547,7 @@ Drawers.prototype = {
         this._toggleAll(true, runEffects);
         return false;
     },
-    
+
     findTrigger: function(content) {
         var trigger;
         this.contents.each(function(contents) {
@@ -539,5 +558,29 @@ Drawers.prototype = {
             }.bind(this));
         }.bind(this));
         return trigger;
+    },
+
+    check: function() {
+        var elements = $$(window.location.hash);
+
+        // check if we have another element to scroll to
+        if (this.scrollToElement) elements.push(this.scrollToElement);
+
+        if (elements.length != 0) {
+            var element = elements[0];
+
+            this.Instances.each(function(instance) {
+                instance.openIfParentOf(element);
+            });
+
+            var position = element.cumulativeOffset();
+            window.scrollTo(position[0], position[1]);
+            this.callEventsWithTag(Drawers.Events.Check, this);
+        }
     }
+
+});
+
+Drawers.Events = {
+  "Check": "Drawers.Events.Check"
 };
